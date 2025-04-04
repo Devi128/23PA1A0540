@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - TaskFlow</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Tasks</h1>
+        <form id="taskForm">
+            <input type="text" id="title" placeholder="Task Title" required>
+            <textarea id="description" placeholder="Description"></textarea>
+            <button type="submit">Add Task</button>
+        </form>
+
+        <div id="tasksList"></div>
+    </div>
+
+    <script>
+        // Load tasks
+        fetch('/tasks')
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('Failed to fetch tasks');
+                }
+                return res.json();
+            })
+            .then(tasks => {
+                if (Array.isArray(tasks)) {
+                    const list = document.getElementById('tasksList');
+                    tasks.forEach(task => {
+                        list.innerHTML += `
+                            <div class="task">
+                                <h3>${task.title}</h3>
+                                <p>${task.description}</p>
+                            </div>
+                        `;
+                    });
+                } else {
+                    console.error('Tasks data is not an array:', tasks);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+        // Add task
+        document.getElementById('taskForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+
+            try {
+                await fetch('/tasks', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, description })
+                });
+                location.reload();
+            } catch (error) {
+                alert('Failed to add task');
+            }
+        };
+    </script>
+</body>
+</html>
