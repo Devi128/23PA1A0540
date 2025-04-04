@@ -5,8 +5,6 @@ const { getFirestore, collection, addDoc, getDocs } = require('firebase/firestor
 const path = require('path');
 
 const app = express();
-
-// Firebase config (replace with your credentials)
 const firebaseConfig = {
     apiKey: "AIzaSyDqbx8YnLGcew35Mp9dIV3UFumc0pr-StA",
     authDomain: "fullstack-66508.firebaseapp.com",
@@ -16,8 +14,6 @@ const firebaseConfig = {
     appId: "1:1040202079246:web:53feee820718ba5c1b705f",
     measurementId: "G-42WFQ35XEJ"
   };
-
-// Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 
@@ -28,9 +24,6 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.get('/', (req, res) => res.render('index'));
 app.get('/dashboard', (req, res) => res.render('dashboard'));
-
-// Auth routes
-// Add better error handling for the login route
 app.post('/login', async (req, res) => {
   try {
     if (!req.body.email || !req.body.password) {
@@ -45,8 +38,6 @@ app.post('/login', async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-
-// Add this registration route after your login route
 app.post('/register', async (req, res) => {
   try {
     if (!req.body.email || !req.body.password) {
@@ -61,9 +52,6 @@ app.post('/register', async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-
-// Task routes
-// Update the tasks routes to use the new Firestore API
 app.post('/tasks', async (req, res) => {
   try {
     const { title, description } = req.body;
